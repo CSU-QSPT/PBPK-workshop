@@ -1,0 +1,570 @@
+# rif.model              MCSim Structural Model 
+#
+#   NAME
+#       RPT_correct.model - MCSim structural model definition file for a whole-body 
+#       physiologically based pharmacokinetic (PBPK) model for rifapentine in
+#       the rats and humans. 
+#
+#   SYNOPSIS
+#       RPT_correct.model is a plain text file that is the source code for an MCSim
+#       version 5.4.0 model definition file.
+#
+#   DESCRIPTION
+#       RPT_correct.model requires preprocessing to C code, and compiling and linking.
+#       This can be done with the MCSim shell script, 'makemcsim', to create 
+#       the binary exectuable, 'mcsim.RPT_correct'. This executable is then run with 
+#       an MCSim simulation file as an argument.
+#     
+#   REFERENCES
+#       MCSim: 
+#       Bois F, Maszle D. (1997) MCSim: A simulation program, Journal of 
+#       Statistical Software, 2(9). 
+#       http://www.stat.ucla.edu/journals/jss/v02/i09.
+#       Current versions: http://www.gnu.org/software/mcsim/
+#
+#     
+#   AUTHOR
+#       Todd Zurlinden
+#       Colorado State University
+#       Fort Collins, CO
+#P
+#   DATE
+#       2016Jan11
+
+
+# Chemical abbreviations:
+#   Rifapentine - RPT, R.
+#	25-desactyl-rifapentine - dRPT, D.
+
+# Dimensions - Units (abbreviation):
+#   mass   - kilogram (kg), gram (g), milligram (mg).
+#   volume - liter (L).
+#   time   - hour (hr).
+#   amount - mole (mol), micromole (mcmol).
+
+States = { 
+# RIF amounts.
+    # Dosage.
+    ABLV_IV_R,   # RIF input to venous blood from IV injection.
+    AST_Oral_R,  # RIF input to stomach from acute oral ingestion.
+    AST_R,       # RIF in stomach (depot).
+  # Tissue/organ compartments.
+    ABLV_R,      # RIF in venous blood. (total)
+    #ABLVf_R,	 # Free RIF in venous blood
+    #ABLVb_R,	 # Bound RIF in venous blood
+    
+    ABLA_R,      # RIF in arterial blood.
+    #ABLAf_R,	 # Free RIF in arterial blood
+    #ABLAb_R,	 # Bound RIF in arterial blood
+
+    ALU_R,       # RIF in lung.
+    ABR_R,       # RIF in brain.
+    AF_R,        # RIF in fat.
+    AH_R,        # RIF in heart.
+    AM_R,        # RIF in muscle.    
+    AB_R,        # RIF in bone.
+    ASK_R,       # RIF in skin.
+    AK_R,        # RIF in kidney.
+    AS_R,        # RIF in spleen.
+    AG_R,        # RIF in gut. 
+    AGL_R,       # Rif in gut lumen.
+    AL_R,        # RIF in liver.
+    ACR_R,       # RIF in carcass.
+    ABI_R,	 # RPT accumulation in Bile
+	
+    ALU_D,       # MET in Lung
+    ABLA_D,      # MET in Arterial Blood
+    ABLV_D,        # Amount of Metabolite in Venous Blood
+    APE_D,       # MET in Peripheral Cmpt
+    ABI_D,	# Met accumulation in Bile
+	
+  # Elimination.
+    
+    # RIF eliminated from kidney.
+    AKE_D,       # RPT_D eliminated from kidney.
+    AKE_R,       # RIF eliminated from liver.
+    ALE_R,       # RIF eliminated from liver.
+    ALE_D,	 # RPT-D eliminated in liver	
+    AGLE_R,       # RIF eliminated from gut lumen.
+    AMET_R,      # Rate of metabolism
+    
+    
+  
+};
+
+Inputs = {
+# Binary exposure functions (1 =     exposure, 0 = no exposure).
+    IVExp_R,     # RIF intravenous injection. 
+    OralExp_R,   # RIF acute oral administration. 
+};
+
+Outputs = {
+#  RIF concentrations (ln = naturPal # Desacetyl Model log, mgL = mg/L). 
+    CPL_R, lnCPL_R, CPL_R_mgL, lnCPL_R_mgL, # Plasma. 
+    CLU_R, lnCLU_R, CLU_R_mgL, lnCLU_R_mgL, # Lung.
+    CK_R,  lnCK_R,  CK_R_mgL, lnCK_R_mgL,  # Kidney.
+    CL_R,  lnCL_R,  CL_R_mgL,  lnCL_R_mgL, # Liver.
+    CS_R,  lnCS_R,  CS_R_mgL, lnCS_R_mgL,  # Spleen.
+	
+    CG_R,  CG_R_mgL, lnCG_R_mgL,
+    CM_R,  CM_R_mgL, lnCM_R_mgL,
+	
+	CF_R,  CF_R_mgL, lnCF_R_mgL,
+	CB_R, lnCB_R_mgL,
+	CBR_R, lnCBR_R_mgL,
+	CH_R, lnCH_R_mgL,
+ 
+ 
+CBI_R, CBI_D,
+    ABI_R_ug, lnABI_R_ug, # Bile amount (RPT)
+CBI_R_mgL, CBI_D_mgL,
+lnCBI_R_mgL, lnCBI_D_mgL, CV_D, CV_D_mgL, lnCV_D_mgL,
+    CPL_D,  lnCPL_D,  CPL_D_mgL, lnCPL_D_mgL, # Plasma RPT-D
+    ABI_D_ug, lnABI_D_ug, # Bile amount (D-RPT)
+    V_Err_lnCPL_R_mgL, V_Err_lnCV_D_mgL, V_Err_CPL_R_mgL, V_Err_lnCPL_D_mgL,
+#Metabolite in Venous blood
+    CLU_D, lnCLU_D, CLU_D_mgL, lnCLU_D_mgL, #Metabolite in Lung
+    CA_D,  lnCA_D,  CA_D_mgL,  lnCA_D_mgL,  #Metabolite in Arterial Blood
+    CPE_D, lnCPE_D, CPE_D_mgL, lnCPE_D_mgL, #Metabolite in Peripheral Compartment
+# Mass balance consistency.
+    ACC_R,     # Total RIF accumulated in system.
+    NetIn_R,   # Net RIF input.
+    BalErr_R,   # RIF balance error.
+
+# Mass balance for RPT-D
+	ACC_D.
+	NetIn_D,
+	BalErr_D,
+
+CV_R, CA_R, VBLV,VBLA, VTC, QTC, fu_R, CAf_R, CVf_R, CVG_R, CVL_R,
+
+};
+#Species.
+species; #Species 1 is rat, Otherwise it is human
+
+
+# Chemical constants.
+  MRIF = 877.04;    # Molar mass of RPT (g/mol) (C43H58N4O2).
+  MDRIF= 834.99;    # Molar mass of DRPT(g/mol) (C45H62N4O11).
+
+# Anatomical/physiological parameters for a standard mouse
+ # (Brown et al. (1997) Toxicol. Ind. Health 13, 407–484., except QFC from 
+
+ # Arms, AD, and Travis, CC. (1988) USEPA Report EPA/600/6-88/004).
+  BW = 0.22;     # Body weight (kg).
+  QCC   = 16.2;     # Cardiac output (L/hr/kg^0.75). 
+
+ # Fractional volumes (fraction of body weight).
+  VLUC = 0.005;         # Lung.
+  VBRC = 0.0057;         # Brain.
+  VFC  = 0.070;         # Fat.
+  VHC  = 0.003;         # Heart. 
+  VMC  = 0.404;         # Muscle.
+  VBC  = 0.06;         # Bone.
+  VSKC = 0.19;         # Skin.
+  VKC  = 0.007;         # Kidney.
+  VSC  = 0.002;        # Spleen.
+  VGC  = 0.024;         # Gut.
+  VLC  = 0.036;         # Liver.
+  VBLVC  = 0.0493;      # Venous blood.
+  VBLAC  = 0.0246;      # Arterial blood.
+  #VCRC = .1194;        # Carcass (1 - all others).
+  VCRC = 1 - VLUC - VBRC - VFC - VHC - VHC - VMC - VBC - VSKC - VGC - VLC - VBLVC - VBLAC;
+  
+ # Fractional blood flows (fraction of cardiac output).
+  QBRC = 0.02;         # Brain.
+  QFC  = 0.07;          # Fat.
+  QHC  = 0.051;         # Heart.
+  QMC  = 0.278;         # Muscle.
+  QBC  = 0.122;          # Bone.
+  QSKC = 0.058;         # Skin.
+  QKC  = 0.141;         # Kidney.
+  QSC  = 0.01;          # Spleen.
+  QGC  = 0.143;          # Gut.
+  QLAC = 0.021;          # Hepatic artery.
+  #QCRC = 0.086;         # Carcass.
+  QCRC = 1 - QBRC - QFC - QHC - QMC - QBC - QSKC - QKC - QSC - QGC - QLAC;
+
+  # Fraction Bound
+  fb = 0.95;
+  fbD = 0.95;
+
+ # Gut-lumen 
+  kSI     = 0.6;        # Small intestine transit rate (1/hr). Plasma
+  lnkSI   = log(0.6);
+  Bmax = 10.;
+  kd = 0.2785;
+  ka = 3.59;
+  
+
+# Rifampin dependent parameters.
+  Fa_R    = 1.0;        # Fractional absorption in stomach.
+  Fa_K = 50.; lnFa_K = log(55.);		# param for fitting fa
+  kSG_R   = 2;       # Stomach-to-gut transfer rate (1/hr).Plasma
+  lnkSG_R = log(2);	#from mean residence time calc.
+  kSL_R   = 0.;         # Stomach-to-portal blood transfer rate (1/hr).
+  lnkSL_R = log(1.E-12);
+  CLC_R   = 0.035;        # Total blood clearance (L/hr/kg).
+  lnCLC_R = log(0.035);
+  CLC_D = .03;
+  lnCLC_D= log(.03);
+  alpha_R = 0.13;       # Renal clearance - fraction of total.
+  kGLG_R  = 1e-09;        # RIF transit rate from gut lumen to gut (1/hr).
+  lnkGLG_R = log(1e-09);
+  #VmaxC= .03828;          #Metabolism vmax (micromole/hr)
+  #lnVmaxC= log(.03828); 
+  VmaxC = 0.; lnVmaxC = -30.;
+  
+  Km=37.1;              #Michaelis Menten Constant(microMole/L)
+  lnKm=log(37.1);
+  Ki= 174.3;               #Substrate Inhibition Constant (microMole/L)
+  lnKi= log(174.3);
+  ktr = 10;  #Transit compartment constant
+  lnktr = log(10);
+  N = 10;    #Number of Transit compartments
+  lnN = log(10);
+
+ # Partition coefficients
+  BP_R  = 0.85;                          # RBC:plasma ratio (Reith et al. 1998)
+  BP_D = 0.9;
+
+# Rat Partition coefficeints (Calculated from Assandri et al.)
+PBR_R = 3.560; lnPBR_R = log(3.560);
+PF_R = 47.895; lnPF_R = log(47.895);
+PB_R = 16.978; lnPB_R = log(16.978);
+PH_R = 38.315; lnPH_R = log(38.315);
+PK_R = 53.212; lnPK_R = log(53.212);
+PL_R = 110.051; lnPL_R = log(110.051);
+PLU_R = 29.384; lnPLU_R = log(29.384);
+PM_R = 22.807; lnPM_R = log(22.807);
+PS_R = 29.973; lnPS_R = log(29.973);
+  
+  PSK_R = 50.793;    lnPSK_R = log(50.793);   # Skin:blood.
+  PG_R  = 68.696;    lnPG_R  = log(68.696);   # Gut:blood.
+  PCR_R = 29.972;    lnPCR_R = log(29.972);   # Carcass:blood (median).  
+  
+  
+  Peff_D = 1;      lnPeff_D= log(1);      #Peripheral for Metabolite
+# RIF exposure/dose.
+  IVDose_R   = 0.;       # RIF Intravenous dose (mg/kg).
+  IVDur_R    = 0.001;    # Duration of infusion (hr), (0.001 hr = 3.6 sec)
+  OralDose_R = 0.;       # RIF gavage dose (mg/kg).
+  OralDur_R  = 0.001;    # Duration of exposure (hr).
+
+# Scaled/calculated parameters.
+  IVDR_R; ODR_R; true_dose;
+  CLB_R; CLR_R;CLB_D; CLR_D;
+  Vmax;
+  VLU; VBR; VF; VH; VM; VB; VSK; VK; VS; VG; VL; VBLV; VBLA; VCR;
+  QC; QLU; QBR; QF; QH; QM; QB; QSK; QK; QS; QG; QLA; QL; QCR;
+
+# Statistical parameters.
+ # Population mean distributions.
+  M_lnkSG_R; M_lnCLC_R;  M_lnkGLG_R; M_lnkSL_R; M_BP_R;
+  M_lnPLU_R; M_lnPBR_R; M_lnPF_R; M_lnPH_R; M_lnPM_R; M_lnPB_R; 
+  M_lnPSK_R; M_lnPK_R; M_lnPS_R; M_lnPG_R; M_lnPL_R; M_lnPCR_R; M_lnkSI;
+  M_lnCLC_D; M_lnKm; M_lnVmaxC; M_lnPeff_D ; M_lnKi; M_lnktr; M_N; M_lnN;
+  M_fb; M_fbD; M_lnFa_K;
+
+ # Population variance distributions.
+  V_lnkSG_R; V_lnCLC_R; V_lnkGLG_R; V_lnkSL_R; V_BP_R;
+  V_lnPLU_R; V_lnPBR_R; V_lnPF_R; V_lnPH_R; V_lnPM_R; V_lnPB_R; 
+  V_lnPSK_R; V_lnPK_R; V_lnPS_R; V_lnPG_R; V_lnPL_R; 
+  V_lnPCR_R;
+  V_lnCLC_D; V_lnKm; V_lnVmaxC; V_lnPeff_D; V_lnKi;
+  V_lnktr; V_N; V_lnN;
+  V_fb; V_fbD; V_lnFa_K;
+
+ # Error in data 
+  V_Err_lnCPL_R;  V_Err_lnCV_D; V_Err_lnCLU_R; V_Err_lnCL_R; V_Err_lnCK_R;
+  #V_Err_CPL_R_mgL; V_Err_lnCV_D_mgL;
+  V_Err_lnCPL_R_mgL_samp;
+
+V_Err_lnCLU_R_mgL_samp;
+V_Err_lnCL_R_mgL_samp;
+V_Err_lnCK_R_mgL_samp;
+V_Err_lnCS_R_mgL_samp;
+V_Err_lnCG_R_mgL_samp;
+V_Err_lnCM_R_mgL_samp;
+ 
+ V_Err_lnCF_R_mgL_samp;
+ V_Err_lnCB_R_mgL_samp;
+ V_Err_lnCBR_R_mgL_samp;
+ V_Err_lnCH_R_mgL_samp;
+  
+  
+
+Initialize {
+
+  ## Rescale log-transformed parameters
+  kSG_R = exp(lnkSG_R); kSI = exp(lnkSI); 
+  CLC_R = exp(lnCLC_R); kGLG_R = exp(lnkGLG_R);
+  
+  
+  PLU_R = exp(lnPLU_R); PBR_R = exp(lnPBR_R); PF_R  = exp(lnPF_R);
+  PH_R  = exp(lnPH_R);  PM_R  = exp(lnPM_R);  PB_R  = exp(lnPB_R);
+  PSK_R = exp(lnPSK_R); PK_R  = exp(lnPK_R);  PS_R  = exp(lnPS_R);
+  PG_R  = exp(lnPG_R);  PL_R  = exp(lnPL_R);  PCR_R = exp(lnPCR_R);
+  VmaxC  = exp(lnVmaxC);   Km    = exp(lnKm);    Ki  =  exp(lnKi);
+  CLC_D = exp(lnCLC_D); Peff_D = exp(lnPeff_D); ktr = exp(lnktr);
+  N = exp(lnN);
+  Fa_K = exp(lnFa_K);
+  
+  #Fa_R = (OralDose_R > 8. ? 0.65: 0.85);
+  Fa_R = Fa_K/(OralDose_R + Fa_K);
+
+# RIF oral dose rate (r ate of input to stomach (mcmol/hr)).
+  ODR_R  = (Fa_R*OralDose_R*BW/OralDur_R)*(1000/MRIF);
+  true_dose = (Fa_R*OralDose_R*BW)*(1000/MRIF); # mumol of rpt
+
+# RIF IV dose rate (rate of input to venous blood (mcmol/hr)).
+  IVDR_R = (IVDose_R*BW/IVDur_R)*(1000/MRIF);
+
+# Compartment volumes (L).
+  VTC  = VLUC+VBRC+VFC+VHC+VMC+VBC+VSKC+VKC+VSC+VGC+VLC+VBLVC+VBLAC+VCRC;
+  VBLV = VBLVC*BW/VTC;      # Venous blood.
+  VLU  = VLUC*BW/VTC;       # Lung.
+  VBLA = VBLAC*BW/VTC;      # Arterial blood.
+  VBR  = VBRC*BW/VTC;       # Brain.
+  VF   = VFC*BW/VTC;        # Fat.
+  VH   = VHC*BW/VTC;        # Heart.
+  VM   = VMC*BW/VTC;        # Muscle.
+  VB   = VBC*BW/VTC;        # Bone.
+  VSK  = VSKC*BW/VTC;       # Skin.
+  VK   = VKC*BW/VTC;        # Kidney. 
+  VS   = VSC*BW/VTC;        # Spleen.
+  VG   = VGC*BW/VTC;        # Gut.
+  VL   = VLC*BW/VTC;        # Liver.
+  VCR  = VCRC*BW/VTC;       # Carcass.
+
+# Flow rates (L/hr).
+  QC  = QCC*pow(BW, 0.75);  # Cardiac output (L/hr).
+  QTC = QBRC+QFC+QHC+QMC+QBC+QSKC+QKC+QSC+QLAC+QGC+QCRC;
+  QLU = QC;                 # Lung.
+  QBR = QBRC*QC/QTC;        # Brain.
+  QF  = QFC*QC/QTC;         # Fat.
+  QH  = QHC*QC/QTC;         # Heart.
+  QM  = QMC*QC/QTC;         # Muscle.
+  QB  = QBC*QC/QTC;         # Bone.
+  QSK = QSKC*QC/QTC;        # Skin.
+  QK  = QKC*QC/QTC;         # Kidney.
+  QS  = QSC*QC/QTC;         # SpLeen.
+  QG  = QGC*QC/QTC;         # Gut.
+  QLA = QLAC*QC/QTC;        # Hepatic artery.
+  QL  = QS+QG+QLA;          # Total liver flow.
+  QCR = QCRC*QC/QTC;        # Carcass.
+# Vmax
+Vmax= VmaxC*pow(BW,.75);
+
+# Clearance rates (L/hr)
+  CLB_R  = (1 - alpha_R)*CLC_R*BW;    # Biliary clearance (L/hr).
+  CLR_R  = (alpha_R)*CLC_R*BW;        # Renal clearance (L/hr).
+  CLB_D  = (1- alpha_R)*CLC_D*BW;     # Biliary Clearance D-RPT
+  CLR_D  = (alpha_R*CLC_D*BW);        #Renal Clearance
+}
+
+Dynamics {
+# Drug tissue/organ concentrations (mcmol/L).
+  CLU_R = ALU_R/VLU;   CVLU_R = CLU_R/PLU_R;  CLU_D = ALU_D/VLU;  CVLU_D = CLU_D/PLU_R; # Lung.
+  CBR_R = ABR_R/VBR;   CVBR_R = CBR_R/PBR_R;  # Brain.
+  CF_R  = AF_R/VF;     CVF_R  = CF_R/PF_R;    # Fat.
+
+  CH_R  = AH_R/VH;     CVH_R  = CH_R/PH_R;    # Heart.
+  CM_R  = AM_R/VM;     CVM_R  = CM_R/PM_R;    # Muscle.
+  CB_R  = AB_R/VB;     CVB_R  = CB_R/PB_R;    # Bone.
+  CSK_R = ASK_R/VSK;   CVSK_R = CSK_R/PSK_R;  # Skin.
+  CK_R  = AK_R/VK;     CVK_R  = CK_R/PK_R;    # Kidney.
+  CS_R  = AS_R/VS;     CVS_R  = CS_R/PS_R;    # Spleen.
+
+  CG_R  = AG_R/VG;     CVG_R  = CG_R/PG_R;    # Gut.
+  CL_R  = AL_R/VL;     CVL_R  = CL_R/PL_R;    # Liver.
+  CCR_R = ACR_R/VCR;   CVCR_R = CCR_R/PCR_R;  # Carcass.
+  
+  CPE_D = APE_D/(VBR + VF + VH + VM + VB + VSK + VK + VS + VG + VL + VCR);  
+  CVPE_D = CPE_D/Peff_D;
+# Blood/plasma concentrations (mcmol/L).
+  CV_R  = ABLV_R/VBLV;  
+  #CV_R = (ABLVf_R + ABLVb_R)/VBLV;
+  CV_D = ABLV_D/VBLV; # Venous blood.
+  
+  CA_R  = ABLA_R/VBLA;  
+  #CA_R = (ABLAf_R + ABLAb_R)/VBLA;
+CA_D = ABLA_D/VBLA; # Arterial blood. Total
+  
+  CAf_R = (1-fb)*CA_R;
+  CVf_R = (1-fb)*CV_R;
+  
+  CAf_D = (1-fbD)*CA_D;
+  CVf_D = (1-fbD)*CV_D;
+
+  CPL_R = CV_R/BP_R;    # Plasma.
+  CPL_D = CV_D/BP_D;
+
+# Pooled Bile Concentrations
+  CBI_R = CLB_R*CL_R/QL;
+
+  CBI_D = CLB_D*CA_D/QL;
+  
+
+# Venous blood
+  dt(ABLV_IV_R) = IVExp_R*IVDR_R;
+  dt(ABLV_R)    = QBR*CVBR_R + QF*CVF_R + QH*CVH_R + QM*CVM_R + QB*CVB_R 
+                   + QSK*CVSK_R + QK*CVK_R + QL*CVL_R + QCR*CVCR_R 
+                   - QLU*CVf_R + dt(ABLV_IV_R);
+
+
+# Lung
+  dt(ALU_R) = QLU*(CVf_R - CVLU_R);## Rescale log-transformed parameters
+
+
+# Arterial blood.
+  dt(ABLA_R) = QLU*(CVLU_R - CAf_R);;
+
+# Brain.
+  dt(ABR_R) = QBR*(CAf_R - CVBR_R);
+
+# Fat.
+  dt(AF_R) = QF*(CAf_R - CVF_R);
+
+# Heart.
+  dt(AH_R) = QH*(CAf_R - CVH_R);
+
+# Muscle.
+  dt(AM_R) = QM*(CAf_R - CVM_R);
+ CVPE_D = CPE_D/Peff_D;
+
+# Bone
+
+  dt(AB_R) = QB*(CAf_R - CVB_R);
+
+# Skin.
+  dt(ASK_R) = QSK*(CAf_R - CVSK_R);
+
+# Kidney.
+  dt(AKE_R) = CLR_R*CAf_R;
+  dt(AK_R)  = QK*(CAf_R - CVK_R) - dt(AKE_R);
+   
+# Spleen.
+  dt(AS_R) = QS*(CAf_R - CVS_R);
+
+# Stomach
+  dt(AST_Oral_R) = OralExp_R*ODR_R;
+  dt(AST_R) = dt(AST_Oral_R) - (kSG_R + kSL_R)*AST_R;
+
+# Liver.
+  dt(ALE_R) = CLB_R*(QLA*CAf_R + QS*CVS_R + QG*CVG_R)/QL;
+  
+  dt(AMET_R)= Vmax*CL_R/(Km + CL_R + pow(CL_R,2)/Ki);
+  dt(AL_R)  = kSL_R*AST_R + QLA*CAf_R + QS*CVS_R + QG*CVG_R - QL*CVL_R 
+              - dt(ALE_R)-dt(AMET_R);
+  dt(ABI_R) = dt(AGLE_R);
+
+# Gut.
+  dt(AGLE_R) = kSI*AGL_R;
+  dt(AGL_R)  = dt(ALE_R) - dt(AGLE_R) - kGLG_R*AGL_R; # Bile???
+  dt(AG_R)   = QG*(CAf_R - CVG_R) + kSG_R*AST_R + kGLG_R*AGL_R;#
+
+# Carcass.
+  dt(ACR_R) = QCR*(CAf_R - CVCR_R);
+
+# Desacetyl Model
+#Venous
+dt(ABLV_D) = dt(AMET_R) + QLU*(CVPE_D - CVf_D);
+
+#Lung
+dt(ALU_D) = QLU*(CVf_D - CVLU_D);
+ 
+
+#Arterial
+dt(AKE_D) = CLR_D*CAf_D;
+dt(ALE_D) = CLB_D*CPE_D;
+dt(ABLA_D) = QLU*(CVLU_D - CAf_D) - dt(AKE_D);
+dt(ABI_D) = dt(ALE_D);
+
+#Peripheral
+
+dt(APE_D) =  QLU*(CAf_D - CVPE_D) - dt(ALE_D);
+
+}
+
+
+CalcOutputs {
+fu_R = CVf_R/CV_R;
+# Log-transformed concentrations.
+ lnCPL_R = (CPL_R > 0.0 ? log(CPL_R) : 1.0E-12);
+ lnCLU_R = (CLU_R > 0.0 ? log(CLU_R) : 1.0E-12);
+ lnCK_R  = (CK_R  > 0.0 ? log(CK_R)  : 1.0E-12);
+ lnCL_R  = (CL_R  > 0.0 ? log(CL_R)  : 1.0E-12);
+ lnCS_R  = (CS_R  > 0.0 ? log(CS_R)  : 1.0E-12);
+ 
+
+# Mass concentrations (mg/L <-- mcmol/L). RPT
+ CPL_R_mgL =  CPL_R*MRIF/1000;
+ 
+ CLU_R_mgL =  CLU_R*MRIF/1000;
+ CK_R_mgL  =  CK_R*MRIF/1000; 
+ CL_R_mgL  =  CL_R*MRIF/1000; 
+ CS_R_mgL  =  CS_R*MRIF/1000;
+ CG_R_mgL  =  CG_R*MRIF/1000;
+ CM_R_mgL =  CM_R*MRIF/1000;
+ 
+ CF_R_mgL =  CF_R*MRIF/1000;
+ CB_R_mgL =  CB_R*MRIF/1000;
+ CBR_R_mgL =  CBR_R*MRIF/1000;
+ CH_R_mgL =  CH_R*MRIF/1000;
+ 
+ 
+ CBI_R_mgL =  CBI_R*MRIF/1000;
+ CBI_D_mgL =  CBI_D*MDRIF/1000;
+ CV_D_mgL =  CV_D*MDRIF/1000;
+
+ ABI_R_ug  =  ABI_R*MRIF; # micro gram RPT recovered in bile
+
+# Mass Concentrations (mg/L). D_RPT
+ CPL_D_mgL =  CPL_D*MDRIF/1000; #Venous
+ CLU_D_mgL =  CLU_D*MDRIF/1000; #Lung
+ CBLA_D_mgL =  CA_D*MDRIF/1000; #Arterial Blood
+ CPE_D_mgL = CPE_D*MDRIF/1000; #Peripheral
+ ABI_D_ug  =  ABI_D*MDRIF; # micro gram RPT recovered in bile
+# Log-transformed Mass Concentrations
+
+lnCPL_R_mgL = (CPL_R_mgL > 0.0 ? log(CPL_R_mgL) : -20);
+
+lnCLU_R_mgL = (CLU_R_mgL > 0.0 ? log(CLU_R_mgL) : -20);
+lnCL_R_mgL = (CL_R_mgL > 0.0 ? log(CL_R_mgL) : -20);
+lnCK_R_mgL = (CK_R_mgL > 0.0 ? log(CK_R_mgL) : -20);
+lnCS_R_mgL = (CS_R_mgL > 0.0 ? log(CS_R_mgL) : -20);
+lnCG_R_mgL = (CG_R_mgL > 0.0 ? log(CG_R_mgL) : -20);
+lnCM_R_mgL = (CM_R_mgL > 0.0 ? log(CM_R_mgL) : -20);
+ 
+ lnCF_R_mgL = (CF_R_mgL > 0.0 ? log(CF_R_mgL) : -20);
+ lnCB_R_mgL = (CB_R_mgL > 0.0 ? log(CB_R_mgL) : -20);
+ lnCBR_R_mgL = (CBR_R_mgL > 0.0 ? log(CBR_R_mgL) : -20);
+ lnCH_R_mgL = (CH_R_mgL > 0.0 ? log(CH_R_mgL) : -20);
+
+lnCPL_D_mgL = (CPL_D_mgL> 0.0 ? log(CPL_D_mgL) : -20);
+lnCLU_D_mgL = (CLU_D_mgL> 0.0 ? log(CLU_D_mgL) : -20);
+lnCBLA_D_mgL = (CBLA_D_mgL> 0.0 ? log(CBLA_D_mgL) : -20);
+lnCPE_D_mgL = (CPE_D_mgL> 0.0 ? log(CPE_D_mgL) : -20);
+lnABI_R_ug = (ABI_R_ug > 0.0 ? log(ABI_R_ug): -20.);
+lnABI_D_ug = (ABI_D_ug > 0.0 ? log(ABI_D_ug): -20);
+lnCV_D_mgL = (CV_D_mgL > 0.0 ? log(CV_D_mgL): -20);
+
+lnCBI_R_mgL = (CBI_R_mgL > 0.0 ? log(CBI_R_mgL): -20.);
+lnCBI_D_mgL = (CBI_D_mgL > 0.0 ? log(CBI_D_mgL): -20.);
+
+## Mass balance consistency check.
+ACC_R    =  AST_R + ABLA_R + ABLV_R + ALU_R + ABR_R + AF_R + AH_R + AM_R 
+           + AB_R + ASK_R + AK_R + AS_R + AG_R + AGL_R + AL_R + ACR_R;
+
+NetIn_R  =  (AST_Oral_R + ABLV_IV_R) - (AGLE_R + AKE_R + AMET_R);
+
+BalErr_R = NetIn_R - ACC_R;
+
+# Mass balance for RPT-D
+ACC_D = ABLV_D + ALU_D + ABLA_D + APE_D;
+
+NetIn_D = AMET_R - (AKE_D + ALE_D);
+
+BalErr_D = NetIn_D - ACC_D;
+}
