@@ -1,0 +1,10 @@
+OutputFile("run_simple.simdat");
+
+Simulation {
+PrintStep(A1, 0, 10, 0.1);
+PrintStep(A2, 0, 10, 0.1);
+
+
+}
+
+End.

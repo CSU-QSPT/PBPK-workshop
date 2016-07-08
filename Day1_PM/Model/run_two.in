@@ -1,0 +1,14 @@
+OutputFile("Run_TwoCmpt.simdat");
+
+Simulation {
+OralDose = 10;
+OralExp = NDoses(2, 1 0, 0 0.001);
+
+PrintStep(CR_mgL, 0, 24, 0.1);
+PrintStep(CS_mgL, 0, 24, 0.1);
+PrintStep(CBL_mgL, 0, 24, 0.1);
+
+PrintStep(BalErr, 0, 24, 0.1);
+
+}
+End.n
