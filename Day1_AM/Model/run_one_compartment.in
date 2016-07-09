@@ -1,0 +1,8 @@
+OutputFile("one_cmpt_results.out");
+
+Simulation {
+A0 = 10;
+PrintStep(A1, 0, 10, 0.1);
+PrintStep(A2, 0, 10, 0.1);
+}
+End.
