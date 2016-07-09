@@ -1,0 +1,169 @@
+#Integrate(Lsodes, 1.0e-5, 0.3e-5, 1);
+MCMC("RPT_MCMC_HUMAN.simdat", "", "", 100000, 0, 10, 100000, 24601);
+
+# ======================================
+
+Level {
+
+# Human specifc parameters
+VLUC = 0.008;         # Lung.
+    VBRC = 0.02;         # Brain.
+    VFC  = 0.214;         # Fat.
+    VHC  = 0.005;         # Heart.
+    VMC  = 0.40;         # Muscle.
+    VBC  = 0.143;         # Bone.
+    VSKC = 0.037;         # Skin.
+    VKC  = 0.004;         # Kidney.
+    VSC  = 0.0026;        # Spleen.
+    VGC  = 0.017;         # Gut.
+    VLC  = 0.026;         # Liver.
+    VBLVC  = 0.0526;      # Venous blood.
+    VBLAC  = 0.0264;      # Arterial blood.
+    VCRC = .044;        # Carcass (1 - all others).
+
+#Flows 
+  QBRC = 0.12;         # Brain.
+  QFC  = 0.0775;          # Fat.
+  QHC  = 0.045;         # Heart.
+  QMC  = 0.145;         # Muscle.
+  QBC  = 0.05;          # Bone.
+  QSKC = 0.05;         # Skin.
+  QKC  = 0.18;         # Kidney.
+  QSC  = 0.01;          # Spleen.
+  QGC  = 0.14;          # Gut.
+  QLAC = 0.06;          # Hepatic artery.
+  QCRC = 0.1225;         # Carcass.
+
+
+
+
+
+lnPBR_R = 1.75206;
+lnPF_R = 4.33220;
+lnPB_R = 3.28973;
+lnPH_R = 4.11048;
+lnPK_R = 4.49126;
+lnPL_R = 5.00550;
+lnPLU_R = 3.89170;
+lnPM_R = 3.55634;
+lnPS_R = 3.90963;
+lnPG_R = 3.58901;
+lnPCR_R = 3.34631;
+lnPSK_R = 3.73560;
+
+
+
+BP_R = 0.98;
+BP_D = 0.86;
+fb = 0.98;
+fbD = 0.931;
+
+# Population means
+Distrib(M_lnCLC_R,  TruncNormal_v, -0.61743, 3.92E-02, -3., 1);
+Distrib(M_lnCLC_D,  Uniform, -5., 5);
+Distrib(M_lnPeff_D, Uniform, -1, 5.);
+Distrib(M_lnkSG_R,  TruncNormal_v, -1.5, 3.92E-02, -3., 1);
+Distrib(M_lnVmaxC, Uniform, -3., 2.);
+Distrib(M_lnKm, TruncNormal_v, 3.6136, 3.92E-02, 3.10682, 3.948354);
+Distrib(M_lnKi, TruncNormal_v, 5.161, 3.92E-02, 4.1713, 5.648269);
+Distrib(M_lnFa_K, TruncNormal_v, 2.9957, 3.92E-02, 2.3025, 3.40119);
+Distrib(M_lnkGLG_R,  TruncNormal_v, -1.77, 3.92E-03, -2.2, -1.51);
+
+# Population variance
+Distrib(V_lnCLC_R,  InvGamma, 3., 0.5);
+Distrib(V_lnCLC_D,  InvGamma, 3., 0.5);
+Distrib(V_lnPeff_D, InvGamma, 3., 0.5);
+Distrib(V_lnkSG_R,  InvGamma, 3., 0.5);
+Distrib(V_lnVmaxC, InvGamma, 3., 0.5);
+Distrib(V_lnKm, InvGamma, 3., 0.5);
+Distrib(V_lnKi, InvGamma, 3., 0.5);
+Distrib(V_lnFa_K, InvGamma, 3., 0.5);
+Distrib(V_lnkGLG_R,  InvGamma, 3., 0.5);
+
+# Data likelihood
+Likelihood(Data(lnCPL_R_mgL), Normal, Prediction(lnCPL_R_mgL), Data(V_Err_lnCPL_R_mgL));
+Likelihood(Data(lnCPL_D_mgL), Normal, Prediction(lnCPL_D_mgL), Data(V_Err_lnCPL_D_mgL));
+
+# =====================================================
+# The actual rat data goes here.
+# Each dose you have gets it's own Simulation {} block
+# Copy and paste the simulation block below for as many sets of data that you have (i.e. every dose is a new Simulation {}
+# =====================================================
+
+
+Level {
+
+Distrib(lnCLC_R,  TruncNormal_v, M_lnCLC_R, V_lnCLC_R, -3., 1);
+Distrib(lnCLC_D,  TruncNormal_v, M_lnCLC_D, V_lnCLC_D, -5., 5);
+Distrib(lnPeff_D, TruncNormal_v, M_lnPeff_D, V_lnPeff_D, -1, 5.);
+Distrib(lnkSG_R,  TruncNormal_v, M_lnkSG_R, V_lnkSG_R,  -3., 1);
+Distrib(lnVmaxC, TruncNormal_v, M_lnVmaxC, V_lnVmaxC, -3., 2.);
+Distrib(lnKm, TruncNormal_v, M_lnKm, V_lnKm, 3.10682, 3.948354);
+Distrib(lnKi, TruncNormal_v, M_lnKi, V_lnKi, 4.1713, 5.648269);
+Distrib(lnFa_K, TruncNormal_v, M_lnFa_K, V_lnFa_K, 2.3025, 3.40119);
+
+Distrib(lnkGLG_R,  TruncNormal_v, M_lnkGLG_R, V_lnkGLG_R, -2.2, -1.51);
+
+
+
+
+Simulation {# Keung (600 mg)
+
+species = 2;
+OralExp_R= NDoses(2, 1 0, 0 0.001);
+OralDose_R= 9.23;
+BW= 65;
+# fb = 0.977;
+# fbD = 0.931;
+
+#Weiner 600
+Print(lnCPL_R_mgL, 2,4,6,7,8,10,12,18,24, 36, 48, 72);
+Data(lnCPL_R_mgL,  1.84054, 2.67415, 2.72785, 2.56495, 2.55723, 2.5337, 2.38876, 2.14241, 1.80005, 1.39623, 0.77928, -2.15998); # RPT
+Data(V_Err_lnCPL_R_mgL, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
+Print(lnCPL_D_mgL, 4,6,7,8,10,12,18,24, 36, 48 72); # Time (remove t1)
+Data(lnCPL_D_mgL, 1.02243, 1.49738, 1.36863, 1.46324, 1.68268, 1.67896, 1.79342, 1.70292, 1.63899, 1.10854, -0.48829); #DRPT
+Data(V_Err_lnCPL_D_mgL, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
+}
+
+Simulation {# Keung (300 mg)
+
+species = 2;
+OralExp_R= NDoses(2, 1 0, 0 0.001);
+OralDose_R= 4.62;
+BW= 65;
+fb = 0.98;
+fbD = 0.931;
+
+#Weiner 600
+Print(lnCPL_R_mgL, 2,4,6,7,8,10,12,18,24, 36, 48, 72);
+Data(lnCPL_R_mgL,  0.95548, 2.09801, 2.06686, 1.92278, 1.91692, 1.86097, 1.67709, 1.41827, 1.04378, 0.51872, -0.15576, -2.35709); # RPT
+Data(V_Err_lnCPL_R_mgL, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
+Print(lnCPL_D_mgL, 4,6,7,8,10,12,18,24, 36, 48); # Time (remove t1)
+Data(lnCPL_D_mgL, 0.45099, 0.90013, 0.75608, 0.87959, 1.08517, 1.04025, 1.11512, 0.94388, 0.74189, 0.30738); #DRPT
+Data(V_Err_lnCPL_D_mgL, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
+}
+
+Simulation {# Keung (150 mg)
+
+species = 2;
+OralExp_R= NDoses(2, 1 0, 0 0.001);
+OralDose_R= 2.308;
+BW= 65;
+fb = 0.98;
+fbD = 0.931;
+
+#Keung 150
+Print(lnCPL_R_mgL, 2,4,6,7,8,10,12,18,24, 36, 48, 72);
+Data(lnCPL_R_mgL,  0.65747, 1.24989, 1.2149, 1.01882, 0.98951, 0.94388, 0.77928, 0.39195, 0.02937, -0.68795, -2.51713, -3.47256); # RPT
+Data(V_Err_lnCPL_R_mgL, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
+Print(lnCPL_D_mgL, 4,6,7,8,10,12,18,24, 36, 48); # Time (remove t1)
+Data(lnCPL_D_mgL,  -2.37447, -0.26561, -0.44991, -0.44991, -0.08362, -0.03688, -0.12923, -0.2867, -2.84077, -2.47122); #DRPT
+Data(V_Err_lnCPL_D_mgL, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
+}
+
+
+
+
+
+} # Close the rat population level
+}

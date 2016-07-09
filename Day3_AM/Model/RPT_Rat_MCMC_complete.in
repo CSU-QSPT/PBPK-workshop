@@ -1,0 +1,155 @@
+#Integrate(Lsodes, 1.0e-6, 0.3e-5, 1);
+MCMC("RPT_MCMC_RAT.simdat", "", "", 100000, 0, 10, 100000, 24601);
+
+# ======================================
+
+Level {
+
+fb = 0.97;
+
+Distrib(M_lnPK_R, TruncNormal_v, 4.48511, 3.92E-02, 3.79196, 4.89057);
+Distrib(M_lnPB_R, TruncNormal_v, 3.34273, 3.92E-02, 2.64959, 3.74820);
+Distrib(M_lnPF_R, TruncNormal_v, 4.37983, 3.92E-02, 3.68668, 4.78529);
+Distrib(M_lnPS_R, TruncNormal_v, 3.91111, 3.92E-02, 3.21796, 4.31658);
+Distrib(M_lnPM_R, TruncNormal_v, 3.63790, 3.92E-02, 2.94475, 4.04336);
+Distrib(M_lnPLU_R, TruncNormal_v, 3.89128, 3.92E-02, 3.19814, 4.29675);
+Distrib(M_lnPL_R, TruncNormal_v, 5.21177, 3.92E-02, 4.51862, 5.61724);
+Distrib(M_lnPBR_R, TruncNormal_v, 1.78045, 3.92E-02, 1.08730, 2.18591);
+Distrib(M_lnPH_R, TruncNormal_v, 4.15666, 3.92E-02, 3.46351, 4.56212);
+Distrib(M_lnPSK_R, TruncNormal_v, 3.77339, 3.92E-02, 3.08024, 4.17886);
+Distrib(M_lnPCR_R, TruncNormal_v, 3.40048, 3.92E-02, 2.70733, 3.80595);
+Distrib(M_lnPG_R, TruncNormal_v, 3.74053, 3.92E-02, 3.04738, 4.14599);
+
+#Distrib(lnFa_K, TruncNormal_v, 2.9957, 3.92E-02, 2.3025, 3.40119);
+Distrib(M_lnFa_K, Uniform, 0., 7.);
+
+Distrib(M_lnCLC_R, Uniform, -2, 2.);
+Distrib(M_lnkSG_R,  TruncNormal_v, -1.2, 3.92E-03, -2., -0.8);
+
+
+
+Distrib(V_lnPBR_R, InvGamma, 3., 0.5);
+Distrib(V_lnPF_R, InvGamma, 3., 0.5);
+Distrib(V_lnPB_R, InvGamma, 3., 0.5);
+Distrib(V_lnPH_R, InvGamma, 3., 0.5);
+Distrib(V_lnPK_R, InvGamma, 3., 0.5);
+Distrib(V_lnPL_R, InvGamma, 3., 0.5);
+Distrib(V_lnPLU_R, InvGamma, 3., 0.5);
+Distrib(V_lnPM_R, InvGamma, 3., 0.5);
+Distrib(V_lnPS_R, InvGamma, 3., 0.5);
+Distrib(V_lnPG_R, InvGamma, 3., 0.5);
+Distrib(V_lnPCR_R, InvGamma, 3., 0.5);
+Distrib(V_lnPSK_R, InvGamma, 3., 0.5);
+Distrib(V_lnFa_K, InvGamma, 3., 0.5);
+Distrib(V_lnCLC_R,  InvGamma, 3., 0.5);
+Distrib(V_lnkSG_R,  InvGamma, 3., 0.5);
+Distrib(V_lnkGLG_R,  InvGamma, 3., 0.5);
+
+Distrib(V_Err_lnCPL_R_mgL_samp, LogUniform, 0.01, 0.5);
+Distrib(V_Err_lnCLU_R_mgL_samp, LogUniform, 0.01, 0.5);
+Distrib(V_Err_lnCL_R_mgL_samp,  LogUniform, 0.01, 0.5);
+Distrib(V_Err_lnCK_R_mgL_samp,  LogUniform, 0.01, 0.5);
+Distrib(V_Err_lnCS_R_mgL_samp,  LogUniform, 0.01, 0.5);
+Distrib(V_Err_lnCM_R_mgL_samp,  LogUniform, 0.01, 0.5);
+Distrib(V_Err_lnCF_R_mgL_samp,  LogUniform, 0.01, 0.5);
+
+Likelihood(Data(lnCPL_R_mgL), Normal_v, Prediction(lnCPL_R_mgL), V_Err_lnCPL_R_mgL_samp);
+Likelihood(Data(lnCLU_R_mgL), Normal_v, Prediction(lnCLU_R_mgL), V_Err_lnCLU_R_mgL_samp);
+Likelihood(Data(lnCL_R_mgL), Normal_v, Prediction(lnCL_R_mgL), V_Err_lnCL_R_mgL_samp);
+Likelihood(Data(lnCK_R_mgL), Normal_v, Prediction(lnCK_R_mgL), V_Err_lnCK_R_mgL_samp);
+Likelihood(Data(lnCS_R_mgL), Normal_v, Prediction(lnCS_R_mgL), V_Err_lnCS_R_mgL_samp);
+Likelihood(Data(lnCM_R_mgL), Normal_v, Prediction(lnCM_R_mgL), V_Err_lnCM_R_mgL_samp);
+Likelihood(Data(lnCF_R_mgL), Normal_v, Prediction(lnCF_R_mgL), V_Err_lnCF_R_mgL_samp);
+
+# =====================================================
+# The actual rat data goes here.
+# Each dose you have gets it's own Simulation {} block
+# Copy and paste the simulation block below for as many sets of data that you have (i.e. every dose is a new Simulation {}
+# =====================================================
+
+Level {
+
+Distrib(lnPBR_R, TruncNormal_v, M_lnPBR_R, V_lnPBR_R, 1.08730, 2.18591);
+Distrib(lnPF_R, TruncNormal_v, M_lnPF_R, V_lnPF_R, 3.68668, 4.78529);
+Distrib(lnPB_R, TruncNormal_v, M_lnPB_R, V_lnPB_R, 2.64959, 3.74820);
+Distrib(lnPH_R, TruncNormal_v, M_lnPH_R, V_lnPH_R, 3.46351, 4.56212);
+Distrib(lnPK_R, TruncNormal_v, M_lnPK_R, V_lnPK_R, 3.79196, 4.89057);
+Distrib(lnPL_R, TruncNormal_v, M_lnPL_R, V_lnPL_R, 4.51862, 5.61724);
+Distrib(lnPLU_R, TruncNormal_v, M_lnPLU_R, V_lnPLU_R, 3.19814, 4.29675);
+Distrib(lnPM_R, TruncNormal_v, M_lnPM_R, V_lnPM_R, 2.94475, 4.04336);
+Distrib(lnPS_R, TruncNormal_v, M_lnPS_R, V_lnPS_R, 3.21796, 4.31658);
+Distrib(lnPG_R, TruncNormal_v, M_lnPG_R, V_lnPG_R, 3.04738, 4.14599);
+Distrib(lnPCR_R, TruncNormal_v, M_lnPCR_R, V_lnPCR_R, 2.70733, 3.80595);
+Distrib(lnPSK_R, TruncNormal_v, M_lnPSK_R, V_lnPSK_R, 3.08024, 4.17886);
+
+Distrib(lnFa_K, TruncNormal_v, M_lnFa_K, V_lnFa_K, 0., 7.);
+Distrib(lnCLC_R,  TruncNormal_v, M_lnCLC_R, V_lnCLC_R, -2., 2.);
+Distrib(lnkSG_R,  TruncNormal_v, M_lnkSG_R, V_lnkSG_R, -2., -0.8);
+Distrib(lnkGLG_R,  TruncNormal_v, M_lnkGLG_R, V_lnkGLG_R, -2.2, -1.51);
+
+Simulation {
+OralExp_R = NDoses(2, 1 0, 0 0.001);
+OralDose_R = 10; # FILL THIS IN
+BW = .22; # FILL THIS IN
+#Fa_R = 0.65;
+
+Print(lnCPL_R_mgL, 1, 8, 24, 72);
+Data(lnCPL_R_mgL, 1.7405, 1.9906, 1.1756, 0.174);
+
+Print(lnCLU_R_mgL, 1, 8, 24, 72);
+Data(lnCLU_R_mgL, 1.7102, 2.2502, 1.6715, 0.3507);
+
+Print(lnCL_R_mgL, 1, 8, 24, 72);
+Data(lnCL_R_mgL, 3.3145, 3.6816, 2.8948, 2.0554);
+
+Print(lnCK_R_mgL, 1, 8, 24, 72);
+Data(lnCK_R_mgL, 2.2017, 2.9205, 2.2006, 1.0006);
+
+Print(lnCS_R_mgL, 1, 8, 24, 72);
+Data(lnCS_R_mgL, 1.5282, 2.337, 1.6351, 0.3646);
+
+Print(lnCM_R_mgL, 1, 8, 24, 72);
+Data(lnCM_R_mgL, 1.1249, 2.1041, 1.3244, 0.131);
+
+Print(lnCF_R_mgL, 1, 8, 24, 72);
+Data(lnCF_R_mgL, 1.5623, 2.6376, 2.2332, 0.4886);
+
+}
+
+Simulation { # Data set 1: Dose 1
+
+OralExp_R = NDoses(2, 1 0, 0 0.001);
+OralDose_R = 10; # FILL THIS IN
+BW = .22; # FILL THIS IN
+#Fa_R = 0.65;
+
+# Print(lnCPL_R_mgL, 1, 2, 4, 8, 24, 48, 72); # Time (<time_points>)
+# Data(lnCPL_R_mgL, 1.5933, 1.6752, 1.8437, 1.9865, 1.477, 0.9933, 0.392); # Coresponding data 
+
+Print(lnCPL_R_mgL, 2, 4, 8, 24, 48, 72); # Time (<time_points>)
+Data(lnCPL_R_mgL, 1.6752, 1.8437, 1.9865, 1.477, 0.9933, 0.392); # Coresponding data 
+
+Print(lnCLU_R_mgL, 0);
+Data(lnCLU_R_mgL, -1);
+
+Print(lnCL_R_mgL, 0);
+Data(lnCL_R_mgL, -1);
+
+Print(lnCK_R_mgL, 0);
+Data(lnCK_R_mgL, -1);
+
+Print(lnCS_R_mgL, 0);
+Data(lnCS_R_mgL, -1);
+
+Print(lnCM_R_mgL, 0);
+Data(lnCM_R_mgL, -1);
+
+Print(lnCF_R_mgL, 0);
+Data(lnCF_R_mgL, -1);
+
+                                                                        
+} #Close simulation
+
+
+} # Close the rat population level
+}
