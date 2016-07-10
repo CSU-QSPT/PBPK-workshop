@@ -1,0 +1,90 @@
+# rif_mc.sim
+# Monte Carlo (MC) simulation file for rif.model
+# Date: 20120424
+
+MonteCarlo("./rpt_mc_human_600.simdat", 10000, 314159);
+
+
+# Posterior params from MCMC CV = 20%.
+
+VLUC = 0.008;         # Lung.
+    VBRC = 0.02;         # Brain.
+    VFC  = 0.214;         # Fat.
+    VHC  = 0.005;         # Heart.
+    VMC  = 0.40;         # Muscle.
+    VBC  = 0.143;         # Bone.
+    VSKC = 0.037;         # Skin.
+    VKC  = 0.004;         # Kidney.
+    VSC  = 0.0026;        # Spleen.
+    VGC  = 0.017;         # Gut.
+    VLC  = 0.026;         # Liver.
+    VBLVC  = 0.0526;      # Venous blood.
+    VBLAC  = 0.0264;      # Arterial blood.
+    VCRC = .044;        # Carcass (1 - all others).
+
+#Flows 
+  QBRC = 0.12;         # Brain.
+  QFC  = 0.0775;          # Fat.
+  QHC  = 0.045;         # Heart.
+  QMC  = 0.145;         # Muscle.
+  QBC  = 0.05;          # Bone.
+  QSKC = 0.05;         # Skin.
+  QKC  = 0.18;         # Kidney.
+  QSC  = 0.01;          # Spleen.
+  QGC  = 0.14;          # Gut.
+  QLAC = 0.06;          # Hepatic artery.
+  QCRC = 0.1225;         # Carcass.
+  
+# ** Working **
+Distrib(lnCLC_R, TruncNormal, -0.45475, 0.18091, -1.38199, 0.48473);
+Distrib(lnCLC_D, TruncNormal, -2.64742, 0.28637, -4.01253, -1.76283);
+Distrib(lnPeff_D, TruncNormal, 1.71301, 0.29695, 0.70791, 2.64140);
+Distrib(lnkSG_R, TruncNormal, -1.10191, 0.18962, -1.62313, -0.63964);
+Distrib(lnVmaxC, TruncNormal, -0.02504, 0.22627, -0.71956, 0.70784);
+Distrib(lnKm, TruncNormal, 3.53469, 0.16706, 3.11377, 3.93377);
+Distrib(lnKi, TruncNormal, 5.12534, 0.18040, 4.66421, 5.61107);
+Distrib(lnFa_K, TruncNormal, 3.06566, 0.16380, 2.49072, 3.39286);
+Distrib(lnkGLG_R, TruncNormal, -1.77228, 0.06110, -1.97152, -1.56722);
+
+fb = 0.9941;
+fbD = 0.981;
+
+
+lnPBR_R = 1.75206;
+lnPF_R = 4.33220;
+lnPB_R = 3.28973;
+lnPH_R = 4.11048;
+lnPK_R = 4.49126;
+lnPL_R = 5.00550;
+lnPLU_R = 3.89170;
+lnPM_R = 3.55634;
+lnPS_R = 3.90963;
+lnPG_R = 3.58901;
+lnPCR_R = 3.34631;
+lnPSK_R = 3.73560;
+
+BP_R = 0.98;
+BP_D = 0.86;
+
+
+Simulation { # 15 minute increments (0.25 hr), for 0-120 hours.
+ species=2;
+ OralExp_R = NDoses(2, 1 0, 0 0.001); 
+   OralDose_R  = 9.23; # 600 mg
+   #OralDose_R  = 13.96; # 900 mg
+   #OralDose_R  = 18.46; # 1200 mg
+   #OralDose_R = 15.;
+   
+  BW = 65.7;
+
+
+   PrintStep(CPL_R_mgL, 0, 72, 0.25);
+   PrintStep(CPL_D_mgL, 0, 72, 0.25);
+
+   #PrintStep(CLU_R_mgL, 0, 72, 0.25);
+   #PrintStep(CK_R_mgL, 0, 72, 0.25);
+   #PrintStep(CL_R_mgL, 0, 72, 0.25);
+   #PrintStep(CS_R_mgL, 0, 72, 0.25);
+   #PrintStep(CPL_D_mgL, 0, 384, 0.25);
+}
+
