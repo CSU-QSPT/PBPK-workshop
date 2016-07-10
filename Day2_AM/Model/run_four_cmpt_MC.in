@@ -1,15 +1,22 @@
-MonteCarlo("four_cmpt_MC.out", 10, 31415);
+Integrate(Lsodes, 1e-5, 1e-7, 1);
+
+MonteCarlo("four_cmpt_MC.out", 10000, 31415);
 
 # Distrib(parameter, TruncNormal, mean, sd, min, max)
-Distrib(QCC, TruncNormal, 16.2, 3.4, 6.0, 26.4);
-Distrib(VKC, TruncNormal, 0.8, 0.24, 0.08, 1.5);
-Distrib(VHC, TruncNormal, 0.025, 0.0075, 0.007, 0.04);
+#Distrib(QCC, TruncNormal, 16.2, 3.4, 6.0, 26.4);
+#Distrib(VKC, TruncNormal, 0.8, 0.24, 0.08, 1.5);
+#Distrib(VHC, TruncNormal, 0.025, 0.0075, 0.007, 0.04);
+
+Distrib(VKC, Uniform, 0.5, 1.5);
+Distrib(CLC, Uniform, 0.05, 0.15);
+Distrib(k1, Uniform, 0.5, 2.);
 
 Simulation {
 OralDose = 10;
 OralExp = NDoses(2, 1 0, 0 0.001);
 
 PrintStep(CBL_mgL, 0, 24, 0.1);
+PrintStep(CK_mgL, 0, 24, 0.1);
 
 }
 End.
