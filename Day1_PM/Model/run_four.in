@@ -1,0 +1,19 @@
+OutputFile("Run_FourCmpt.out");
+
+Simulation {
+OralDose = 10;
+#PS = 1E-5;
+#OralExp = NDoses(4, 1 0 1 0, 0 0.001 50 50.001); #
+OralExp = NDoses(2, 1 0, 0 0.001); #
+#PR = 1E-5;
+k1 = 100.;
+PrintStep(CR_mgL, 0, 24, 0.1);
+PrintStep(CS_mgL, 0, 24, 0.1);
+PrintStep(CK_mgL, 0, 24, 0.1);
+PrintStep(CH_mgL, 0, 24, 0.1);
+PrintStep(CBL_mgL, 0, 24, 0.1);
+
+PrintStep(BalErr, 0, 24, 0.1);
+
+}
+End.

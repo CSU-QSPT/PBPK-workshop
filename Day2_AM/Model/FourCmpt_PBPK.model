@@ -1,0 +1,206 @@
+
+#-----------------------------------------------------------------------
+#                         Initial Comments
+#-----------------------------------------------------------------------
+# Name
+# Date
+# Model version
+
+
+#-----------------------------------------------------------------------
+# 			            Initialize Parameters 
+#               (plus params for added compartments)
+#-----------------------------------------------------------------------
+QCC = 15.; # Cardiac output L/kg
+BW = 60.; # BW in kg
+
+VSC = 0.185;            # Slowly Perfused L/BW^0.75
+VRC = 0.0765;  			# Rapidly Perfused L/BW^0.75
+VBLC = 0.1;				# Blood volume l/BW^0.75
+VKC = 0.007;
+VHC = 0.1;
+
+QSC = 0.3;          # Slowly Perfused percentage of cardiac output			
+QHC = 0.1;
+QKC = 0.05;
+QRC = 0.55;		# Rapidly Perfused percentage of cardiac output
+
+CLC = 0.1;			# Clearance rate L/hr/kg^0.75
+
+PR = 0.6;
+PS = 0.2;
+PH = 1.5;
+PK = 1.8;
+
+MW = 300;		# Molecular weight of drug (ug/umol)
+
+k1 = 0.5; # First order rate constant
+
+#-----------------------------------------------------------------------
+#                   Parameters for Exposure/Dose
+#-----------------------------------------------------------------------
+OralDose;		# Administered dose (mg/kg)
+OralDur = 0.001; # Duration of oral dose (hr)
+ODose;     # Dose of chemical (muM/hr)
+fa = 1;		# Fraction absorbed
+
+#-----------------------------------------------------------------------
+#                   Defined Scaled Parameters
+#				(Anything that gets calculated in "Dynamics")
+#-----------------------------------------------------------------------
+VR; VS; VBL; VH; VK;
+QC; QR; QS; QH; QK;
+CL;
+#CR; CS; CA;
+
+
+#-----------------------------------------------------------------------
+#                   Calibration Parameters
+#-----------------------------------------------------------------------
+
+
+
+# Population Mean Parameters (M_...)
+#-----------------------------------
+
+
+
+# Population Variance Parameters (Var_...)
+#-----------------------------------------s
+
+
+#-----------------------------------------------------------------------
+#                          Data Error (Verr_...)
+# 				Define here if you are using an error distribution, 
+# 					rather than error at specific time points.
+#-----------------------------------------------------------------------
+
+
+
+#-----------------------------------------------------------------------
+#                 State Variables (Dependent Variables in ODE)
+#-----------------------------------------------------------------------
+States = { # Separate each state with a comma
+AO, # Oral dosing to slowly perfused
+AELIM, # elimination rate from rapidly perfused
+AMET, # Metabolism rate
+
+AS, # Slowly perfused compartment
+AR, # Rapidly perfused compartment
+AH,
+AK,
+
+ABL, # Blood amount
+
+};
+
+
+
+#-----------------------------------------------------------------------
+#                    Inputs (Switches for Exposures)
+#-----------------------------------------------------------------------
+Inputs = { # Separate each input with a comma
+OralExp,
+
+};
+
+
+
+#-----------------------------------------------------------------------
+#                       Outputs from the Model
+# 				Anything in CalcOutputs must go here
+#-----------------------------------------------------------------------
+Outputs = { # Separate with comma
+CR, CS, CA, CH, CK,
+CR_mgL, CS_mgL, CBL_mgL, CH_mgL, CK_mgL, 
+
+# Mass Balances
+ACC,  NetIn,  BalErr,
+};
+
+
+
+
+#-----------------------------------------------------------------------
+#                       Initialize the Model
+# 		Initialize paramaters, set initial conditions, etc.
+#-----------------------------------------------------------------------
+Initialize { # Separate with semicolon
+ODose  = (fa*OralDose*BW/OralDur)*(1000./MW); #umol/hr dosing
+
+VR = VRC*pow(BW, 0.75); 
+VS = VSC*pow(BW, 0.75);
+VH = VHC*pow(BW, 0.75); 
+VK = VKC*pow(BW, 0.75);
+VBL = VBLC*pow(BW, 0.75);
+QC = QCC*pow(BW, 0.75);
+QR = QRC*QC; 
+QS = QSC*QC;
+QH = QHC*QC; 
+QK = QKC*QC;
+
+CL = CLC*pow(BW, 0.75);
+
+};
+
+
+
+#-----------------------------------------------------------------------
+#                       The Model (Actual ODEs)
+#-----------------------------------------------------------------------
+Dynamics { # Separate with semicolon
+
+# Define concentrations or other independent variables used in ODEs
+#------------------------------------------------------------------
+CR = AR/VR;      # Rapidly Perfused
+CVR = CR/PR;
+CS = AS/VS;      # Slowly Perfused
+CVS = CS/PS;
+CH = AH/VH;      # Liver Perfused
+CVH = CH/PH;
+CK = AK/VK;      # Kidney Perfused
+CVK = CK/PK;
+
+CA = ABL/VBL;   # APAP Blood
+CV = (QR*CVR + QS*CVS + QH*CVH + QK*CVK)/QC; # Pooled venous blood concentration
+
+
+
+# Acutal ODE's
+#--------------
+dt(AO) = OralExp*ODose;
+dt(AELIM) = CL*CK;
+dt(AMET) = k1*CH;
+
+dt(AR) = QR*(CA - CVR); 
+dt(AS) = QS*(CA - CVS);
+dt(AH) = dt(AO) + QH*(CA - CVH) - dt(AMET);
+dt(AK) = QK*(CA - CVK) - dt(AELIM); # Elimiation in kidney
+dt(ABL) = QC*(CV - CA);
+
+
+};
+
+
+#-----------------------------------------------------------------------
+#                       Calculate the Model Outputs
+#		(Any model output calculation must go here first)
+#-----------------------------------------------------------------------
+CalcOutputs { # Separate with semicolon
+
+# Transform concentrations
+#--------------------------
+CR_mgL = CR*1000/MW;
+CS_mgL = CS*1000/MW;
+CH_mgL = CH*1000/MW;
+CK_mgL = CK*1000/MW;
+CBL_mgL = CA*1000/MW;
+
+
+# Calculate Mass Balance
+#------------------------
+ACC = AR + AS + ABL + AK + AH;
+NetIn = AO - AELIM - AMET;
+BalErr = (NetIn - ACC);#/(NetIn+ACC);
+}
+End.
