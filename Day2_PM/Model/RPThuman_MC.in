@@ -1,7 +1,4 @@
-# rif_mc.sim
-# Monte Carlo (MC) simulation file for rif.model
-# Date: 20120424
-
+Integrate(Lsodes, 1e-5, 1e-7, 1);
 MonteCarlo("./rpt_mc_human_600.simdat", 10000, 314159);
 
 
@@ -67,7 +64,7 @@ BP_R = 0.98;
 BP_D = 0.86;
 
 
-Simulation { # 15 minute increments (0.25 hr), for 0-120 hours.
+Simulation { # 15 minute increments (0.25 hr), for 0-72 hours.
  species=2;
  OralExp_R = NDoses(2, 1 0, 0 0.001); 
    OralDose_R  = 9.23; # 600 mg
@@ -87,4 +84,4 @@ Simulation { # 15 minute increments (0.25 hr), for 0-120 hours.
    #PrintStep(CS_R_mgL, 0, 72, 0.25);
    #PrintStep(CPL_D_mgL, 0, 384, 0.25);
 }
-
+End.

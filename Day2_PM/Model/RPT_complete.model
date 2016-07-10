@@ -82,7 +82,7 @@ States = {
     
     # RIF eliminated from kidney.
     AKE_D,       # RPT_D eliminated from kidney.
-    AKE_R,       # RIF eliminated from liver.
+    AKE_R,       # RIF eliminated from kidney.
     ALE_R,       # RIF eliminated from liver.
     ALE_D,	 # RPT-D eliminated in liver	
     AGLE_R,       # RIF eliminated from gut lumen.
@@ -119,13 +119,12 @@ CBI_R, CBI_D,
     ABI_R_ug, lnABI_R_ug, # Bile amount (RPT)
 CBI_R_mgL, CBI_D_mgL,
 lnCBI_R_mgL, lnCBI_D_mgL, CV_D, CV_D_mgL, lnCV_D_mgL,
-    CPL_D,  lnCPL_D,  CPL_D_mgL, lnCPL_D_mgL, # Plasma RPT-D
+    CPL_D,   CPL_D_mgL, lnCPL_D_mgL, # Plasma RPT-D
     ABI_D_ug, lnABI_D_ug, # Bile amount (D-RPT)
-    V_Err_lnCPL_R_mgL, V_Err_lnCV_D_mgL, V_Err_CPL_R_mgL, V_Err_lnCPL_D_mgL,
 #Metabolite in Venous blood
-    CLU_D, lnCLU_D, CLU_D_mgL, lnCLU_D_mgL, #Metabolite in Lung
-    CA_D,  lnCA_D,  CA_D_mgL,  lnCA_D_mgL,  #Metabolite in Arterial Blood
-    CPE_D, lnCPE_D, CPE_D_mgL, lnCPE_D_mgL, #Metabolite in Peripheral Compartment
+    CLU_D,  CLU_D_mgL, lnCLU_D_mgL, #Metabolite in Lung
+    CA_D,      #Metabolite in Arterial Blood
+    CPE_D,  CPE_D_mgL, lnCPE_D_mgL, #Metabolite in Peripheral Compartment
 # Mass balance consistency.
     ACC_R,     # Total RIF accumulated in system.
     NetIn_R,   # Net RIF input.
@@ -136,7 +135,8 @@ lnCBI_R_mgL, lnCBI_D_mgL, CV_D, CV_D_mgL, lnCV_D_mgL,
 	NetIn_D,
 	BalErr_D,
 
-CV_R, CA_R, VBLV,VBLA, VTC, QTC, fu_R, CAf_R, CVf_R, CVG_R, CVL_R,
+CV_R, CA_R, fu_R, CAf_R, CVf_R, CVG_R, CVL_R,
+lnCBLA_D_mgL
 
 };
 #Species.
@@ -461,7 +461,7 @@ CA_D = ABLA_D/VBLA; # Arterial blood. Total
 
 # Gut.
   dt(AGLE_R) = kSI*AGL_R;
-  dt(AGL_R)  = dt(ALE_R) - dt(AGLE_R) - kGLG_R*AGL_R; # Bile???
+  dt(AGL_R)  = dt(ALE_R) - dt(AGLE_R) - kGLG_R*AGL_R; # Bile
   dt(AG_R)   = QG*(CAf_R - CVG_R) + kSG_R*AST_R + kGLG_R*AGL_R;#
 
 # Carcass.
@@ -568,3 +568,4 @@ NetIn_D = AMET_R - (AKE_D + ALE_D);
 
 BalErr_D = NetIn_D - ACC_D;
 }
+End.
