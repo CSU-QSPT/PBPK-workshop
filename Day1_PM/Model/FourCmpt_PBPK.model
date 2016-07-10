@@ -190,11 +190,11 @@ CalcOutputs { # Separate with semicolon
 
 # Transform concentrations
 #--------------------------
-CR_mgL = CR*1000/MW;
-CS_mgL = CS*1000/MW;
-CH_mgL = CH*1000/MW;
-CK_mgL = CK*1000/MW;
-CBL_mgL = CA*1000/MW;
+CR_mgL = CR*MW/1000;
+CS_mgL = CS*MW/1000;
+CH_mgL = CH*MW/1000;
+CK_mgL = CK*MW/1000;
+CBL_mgL = CA*MW/1000;
 
 
 # Calculate Mass Balance
