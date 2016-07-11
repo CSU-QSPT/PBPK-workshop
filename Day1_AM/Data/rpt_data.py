@@ -36,7 +36,7 @@ def human_data():
                 
                                 },
 }
-    return human_data
+    return data_dict
 
 def rat_data():
     data_dict = {'dose': 10, # mg/kg
