@@ -68,7 +68,8 @@ Likelihood(Data(lnCF_R_mgL), Normal_v, Prediction(lnCF_R_mgL), V_Err_lnCF_R_mgL_
 # =====================================================
 
 Level { # Study level
-
+    
+    
 Distrib(lnPBR_R, TruncNormal_v, M_lnPBR_R, V_lnPBR_R, 1.08730, 2.18591);
 Distrib(lnPF_R, TruncNormal_v, M_lnPF_R, V_lnPF_R, 3.68668, 4.78529);
 Distrib(lnPB_R, TruncNormal_v, M_lnPB_R, V_lnPB_R, 2.64959, 3.74820);

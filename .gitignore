@@ -1,5 +1,6 @@
 *.simdat
 *.out
+*.out.kernel
 *.pyc
 ~*
 *~

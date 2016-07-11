@@ -1,0 +1,26 @@
+MCMC("Simple_cal.out", "", "", 1000 ,0, 1, 1000, 31415);
+Level {
+
+# Fill in priors
+Distrib(lnPLU_R, TruncNormal, 3.89128, 0.3, 0.89, 4.89);
+Distrib(lnPL_R, TruncNormal, 5.21177, 0.3, 4.2, 6.2);
+
+# Fill in likelihoods
+Likelihood(Data(lnCLU_R_mgL), Normal, Prediction(lnCLU_R_mgL), 0.1);
+Likelihood(Data(lnCL_R_mgL), Normal, Prediction(lnCL_R_mgL), 0.1); 
+
+# Fill in simulations
+Simulation {
+OralExp_R = NDoses(2, 1 0, 0 0.001);
+OralDose_R = 10; # FILL THIS IN
+BW = .22; # FILL THIS IN
+
+Print(lnCLU_R_mgL, 1, 8, 24, 72);
+Data(lnCLU_R_mgL, 1.7102, 2.2502, 1.6715, 0.3507);
+
+Print(lnCL_R_mgL, 1, 8, 24, 72);
+Data(lnCL_R_mgL, 3.3145, 3.6816, 2.8948, 2.0554);
+
+} # Close simulation
+
+} # Close level

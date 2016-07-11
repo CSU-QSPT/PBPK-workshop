@@ -1,5 +1,5 @@
 Integrate(Lsodes, 1e-5, 1e-7, 1);
-MonteCarlo("./rpt_mc_human_600.simdat", 10000, 314159);
+MonteCarlo("./rpt_mc_human_900.simdat", 10000, 314159);
 
 
 # Posterior params from MCMC CV = 20%.
@@ -67,8 +67,8 @@ BP_D = 0.86;
 Simulation { # 15 minute increments (0.25 hr), for 0-72 hours.
  species=2;
  OralExp_R = NDoses(2, 1 0, 0 0.001); 
-   OralDose_R  = 9.23; # 600 mg
-   #OralDose_R  = 13.96; # 900 mg
+   #OralDose_R  = 9.23; # 600 mg
+   OralDose_R  = 13.96; # 900 mg
    #OralDose_R  = 18.46; # 1200 mg
    #OralDose_R = 15.;
    

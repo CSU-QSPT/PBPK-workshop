@@ -14,7 +14,8 @@ df = pd.read_csv(fpath, sep='\t')
 
 marker = ['CPL_R_mgL', 'CPL_D_mgL']
 fig, ax = plt.subplots(1,2, figsize=(8,6))
-time = np.arange(0, 72+0.25, 0.25)
+#time = np.arange(0, 72+0.25, 0.25)
+time = np.linspace(0, 72, 289)
 for i,m in enumerate(marker):
     template = '%s_1.%s'
     temp_df = df.ix[:, template%(m,1):template%(m,289)]
